@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(my-llvm-utils)
 
+# Export compile_commands.json (for clangd, editors, tooling)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 #===============================================================================
 # 1. VERIFY LLVM INSTALLATION DIR
 # This is just a bit of a sanity checking.

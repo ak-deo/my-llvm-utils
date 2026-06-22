@@ -1,11 +1,11 @@
 # THE LIST OF PLUGINS AND THE CORRESPONDING SOURCE FILES
 # ======================================================
 set(LLVM_PLUGINS
-	DCE
+	HelloWorld
     )
 
-set(DCE_SOURCES
-	DCE.cpp)
+set(HelloWorld_SOURCES
+	HelloWorld.cpp)
 
 # CONFIGURE THE PLUGIN LIBRARIES
 # ==============================
