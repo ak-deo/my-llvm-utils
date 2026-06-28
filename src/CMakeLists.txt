@@ -2,10 +2,13 @@
 # ======================================================
 set(LLVM_PLUGINS
 	HelloWorld
+	MyDCE
     )
 
 set(HelloWorld_SOURCES
 	HelloWorld.cpp)
+set(MyDCE_SOURCES
+	DCE.cpp)
 
 # CONFIGURE THE PLUGIN LIBRARIES
 # ==============================
