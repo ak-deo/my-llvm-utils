@@ -2,6 +2,7 @@
 // This removes globally unused instructions, and locally killed instructions
 // Where 'local' means local to a basic block
 
+#include "llvm/IR/PassManager.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
 #include "llvm/Support/raw_ostream.h"
@@ -58,6 +59,13 @@ llvm::PassPluginLibraryInfo getMyDCEPluginInfo() {
                     return true;
                   }
                   return false;
+                });
+            // Run automatically when clang/opt build a default pipeline (e.g.
+            // -O0), so `clang -O0 -fpass-plugin=libMyDCE.so` actually invokes
+            // the pass. PipelineStart reliably fires even at -O0.
+            PB.registerPipelineStartEPCallback(
+                [](ModulePassManager &MPM, OptimizationLevel) {
+                  MPM.addPass(createModuleToFunctionPassAdaptor(MyDCE()));
                 });
           }};
 }

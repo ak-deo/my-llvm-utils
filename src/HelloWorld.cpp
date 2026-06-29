@@ -1,5 +1,6 @@
 // Starting off with the HelloWorld version of the thing
 
+#include "llvm/IR/PassManager.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
 #include "llvm/Support/raw_ostream.h"
@@ -43,6 +44,12 @@ llvm::PassPluginLibraryInfo getHelloWorldPluginInfo() {
                     return true;
                   }
                   return false;
+                });
+            // Run automatically when clang/opt build a default pipeline (e.g.
+            // -O0), so `clang -O0 -fpass-plugin=libHelloWorld.so` invokes it.
+            PB.registerPipelineStartEPCallback(
+                [](ModulePassManager &MPM, OptimizationLevel) {
+                  MPM.addPass(createModuleToFunctionPassAdaptor(HelloWorld()));
                 });
           }};
 }
