@@ -5,13 +5,27 @@
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
 #include "llvm/Support/raw_ostream.h"
+#include <vector>
 
 using namespace llvm;
 
 namespace {
   // This method implements what the pass does
   void visitor(Function &F) {
-    errs() << "(llvm-tutor)   number of arguments: " << F.arg_size() << "\n";
+	std::vector<Instruction *> InstrsForDeletion;
+	
+    for (auto &BB : F) {
+      for (auto &CandidateI : BB) {
+        if (CandidateI.use_empty() && !CandidateI.mayHaveSideEffects() && !CandidateI.isTerminator()) {
+		  InstrsForDeletion.push_back(&CandidateI);
+		}
+      }
+    }
+
+    // Delete the instructions
+    for (auto *I : InstrsForDeletion) {
+	  I->eraseFromParent();
+    }
   }
 
 // New PM implementation
